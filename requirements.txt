@@ -1,0 +1,8 @@
+spacy
+nltk
+dateparser
+datefinder
+gensim
+lda
+pyLDAvis
+pandas==1.1.2

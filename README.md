@@ -1,2 +1,2 @@
 # ilab2
-Novelty &amp; Transience in Politics
+ilab2: Novelty and Transience in Politcs
