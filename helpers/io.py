@@ -1,7 +1,18 @@
+"""
+This module is a wrapper for io functions to write and read from pickle files
+"""
 from operator import truediv
 
 
 def to_pickle(obj, file_name):
+    """
+    Save an object to a pickle file using the highest pickle protocle.
+    The method will create the parent folder if it does not exist.
+
+    Args:
+        obj: object to be saved to a pickle file
+        file_name: file path as a string
+    """
     import pickle
     import os
 
@@ -19,6 +30,12 @@ def to_pickle(obj, file_name):
 
 
 def from_pickle(file_name):
+    """
+    Read object form pickle file
+
+    Args:
+        file_name: file path as a string
+    """
     import pickle
     import os
 
@@ -33,6 +50,9 @@ def from_pickle(file_name):
 
 
 def print_sys_stats():
+    """
+    Print system cpu and memory utilisation.
+    """
     import psutil
     cpu = psutil.cpu_percent()
     mem = psutil.virtual_memory()

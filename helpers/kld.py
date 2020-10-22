@@ -1,5 +1,18 @@
-
+"""
+This module utlises Kullback–Leibler divergence for discrete probabilities to implement
+resonance measures based on topic distributions for a given window of documents
+"""
 def KLD_N_enumerator(i, probs, Nw=2, Tw=2):
+    """
+    Generate an enumerator of documents preceeding a given centre document (indicated by argument i),
+    this enumerator is used for measure the novelty of centre document i in relation to prior documents (Nw)
+
+    Args:
+        i (int): location of centre document
+        probs (pandas.Series or list): a list of probabilitie distributions for documents in a chronological order
+        Nw (int, optional): window size of prior documents. Defaults to 2.
+        Tw (int, optional): ignored, window size of future documents. Defaults to 2.
+    """
     import pandas as pd
     if isinstance(probs, pd.Series) is True:
         N_enumerator = enumerate(probs.iloc[max(i - Nw,0):i])
@@ -10,6 +23,16 @@ def KLD_N_enumerator(i, probs, Nw=2, Tw=2):
 
 
 def KLD_T_enumerator(i, probs, Nw=2, Tw=2):
+    """
+    Generate an enumerator of documents following a given centre document (indicated by argument i),
+    this enumerator is used for measure the transience of centre document i in relation to following documents (Tw)
+
+    Args:
+        i (int): location of centre document
+        probs (pandas.Series or list): a list of probabilitie distributions for documents in a chronological order
+        Nw (int, optional): ignored, window size of prior documents. Defaults to 2.
+        Tw (int, optional): window size of future documents. Defaults to 2.
+    """
     import pandas as pd
     if isinstance(probs, pd.Series) is True:
         T_enumerator = enumerate(probs.iloc[i + 1:i + Tw + 1])
@@ -31,6 +54,9 @@ def calcKLD(probs, Nw=100, Tw=100):
         probs (pd.Series or list): must be a list or pd.Series. documents' topic probabilities list, each item in the list is a list of topic probabilities
         Nw (int, optional): prior window size to calculate Novelty. Defaults to 100.
         Tw (int, optional): post window size to calculate transcience. Defaults to 100.
+
+    Returns:
+        tuple(list, list, list: novelty), transience, resonance scores
     """
     import tqdm
     import numpy as np

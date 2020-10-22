@@ -1,9 +1,21 @@
+"""
+Text loading and parsing functions for the Australian Parliament Hansard corpus.
+"""
+
 from pickle import FALSE
 import pandas
 from pandas.core import series
 
 
 def rootFolder(exp=''):
+    """
+    Get root folder path for Hansard modeling experiments
+    Args:
+        exp (str, optional): name of experiment. Defaults to ''.
+
+    Returns:
+        str: full path for a given experiment
+    """
     root_folder = '/home/azureuser/cloudfiles/code/data/processing/hansard/experiment'
 
     if (len(exp) > 0):
@@ -21,6 +33,16 @@ def rootFolder(exp=''):
 
 
 def getTopicsProbsDf(exp='', withCounts=True):
+    """
+    Load list of topic probabilities for Hansard speeches, the list maintains the same order of speeches as the speeches dataframe in the experiment folder
+
+    Args:
+        exp (str, optional): name of experiment. Defaults to ''.
+        withCounts (bool, optional): include count of tokens for each speech. Defaults to True.
+
+    Returns:
+        pandas.DataFrame: data frame with a column for topic probabiilties, and optional column for token counts
+    """
     import pandas as pd
     root_folder = rootFolder(exp)
     df_probs_fn = root_folder + '/speeches_df_topics_probs.pkl'
@@ -39,6 +61,19 @@ def getTopicsProbsDf(exp='', withCounts=True):
 
 
 def loadSpeechesOnly(exp='', slicer=None):
+    """
+    Load text for speeches.
+
+    Details:
+        slicer argument is a series of True and False values, it could be used to filter the list of speeches. One common use for this argument is to filter speeches by party
+
+    Args:
+        exp (str, optional): name of experiment. Defaults to ''.
+        slicer (pandas.Series, optional): Pandas series for filter speeches. Defaults to None.
+
+    Returns:
+        pandas.DataFrame: a dataframe of text for hansard speeches, optionally filtered by input slicer
+    """
     import pandas as pd
     root_folder = rootFolder(exp)
     df_speeches_fn = root_folder + '/speeches_df_only_text.pkl'
@@ -55,6 +90,15 @@ def loadSpeechesOnly(exp='', slicer=None):
     return(df)
 
 def getNgramsList(exp=''):
+    """
+    Load tokens (and bigrams) for the Hansard dataset, the list maintains the same order of speeches as the speeches dataframe in the experiment folder
+
+    Args:
+        exp (str, optional): name of experiment. Defaults to ''.
+
+    Returns:
+        list: list of tokens for all speeches
+    """
     import helpers.io as pickle_io
     root_folder = rootFolder(exp)
     fn = root_folder + '/bigrams.pkl'

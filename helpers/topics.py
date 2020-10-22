@@ -1,6 +1,21 @@
+"""
+Helper functions to query LDA topics model.
+"""
 # %%
 #  print topics and top terms in topic
 def get_topic(lda_model, topicid, n, print_prob=False):
+    """
+    Return terms and probabilities in a topic from an LDA topic model given a topic id
+
+    Args:
+        lda_model (gensim.models.ldamodel.LdaModel): trained gensim LDS topic model
+        topicid (int): topic ID
+        n (int): top n terms in a topic to be returned
+        print_prob (bool, optional): generate a formatted string with topic probabilities. Defaults to False.
+
+    Returns:
+        tuple(list,list,str): terms, probs, s
+    """
     topic_terms = lda_model.get_topic_terms(topicid, topn=n)
     terms = list()
     probs = list()
@@ -21,6 +36,17 @@ def get_topic(lda_model, topicid, n, print_prob=False):
 
 # %%
 def print_topic(lda_model, topicid, n, print_prob=False):
+    """
+    Print top n terms in a topic
+
+    Args:
+        lda_model (gensim.models.ldamodel.LdaModel): trained gensim LDS topic model
+        topicid (int): topic ID
+        n (int): top n terms in a topic to be returned
+        print_prob (bool, optional): generate a formatted string with topic probabilities. Defaults to False.
+    Returns:
+        tuple(list,list,str): terms, probs, s
+    """
     terms, probs, s = get_topic(lda_model, topicid, n, print_prob)
 
     print(s)
@@ -30,6 +56,16 @@ def print_topic(lda_model, topicid, n, print_prob=False):
 
 # %%
 def get_top_topics_from_df(result_model, speech_topic_probs, ntopics=5, nterms=4):
+    """
+    Get the details of top n topics from a given documents' topic probabilities list
+    Args:
+        result_model (gensim.models.ldamodel.LdaModel): trained gensim LDS topic model
+        speech_topic_probs (list): list of topic probabilities for a document
+        ntopics (int, optional): top n topics to returned. Defaults to 5.
+        nterms (int, optional): top n terms in a topic. Defaults to 4.
+    Returns:
+        list: list of strings representing the top n terms and weighting in a given list of topic probabilities
+    """
     import numpy as np
     ret = list()
     for topic_index in np.flip(speech_topic_probs.argsort())[:ntopics]:

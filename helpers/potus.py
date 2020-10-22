@@ -1,5 +1,16 @@
+"""
+Text loading and parsing functions for the US Presidential Speeches corpus.
+"""
 # %%
 def rootFolder(exp=''):
+    """
+    Get root folder path for POTUS modeling experiments
+    Args:
+        exp (str, optional): name of experiment. Defaults to ''.
+
+    Returns:
+        str: full path for a given experiment
+    """
     root_folder = '/home/azureuser/cloudfiles/code/data/processing/potus/experiment'
 
     if (len(exp) > 0):
@@ -43,6 +54,15 @@ def parse_file(file_name):
 
 # %%
 def list_speeches(root_folder):
+    """
+    Loads and returns a list of POTUS speeches, this functions knows how to parse the folder structure of the POTUS dataset which is downloaded from http://www.thegrammarlab.com
+
+    Args:
+        root_folder (str): folder path for the POTUS data set
+
+    Returns:
+        list: list of speeches, each item contains the details of a single speech
+    """
     import glob
     import tqdm
 
@@ -63,6 +83,15 @@ def list_speeches(root_folder):
 
 # %%
 def to_df(speeches_list):
+    """
+    Converts a list of speeches to a dataframe after extracting speech title, date and text
+
+    Args:
+        speeches_list (list): list of speeches generated from calling the list_speeches() function
+
+    Returns:
+        pandas.DataFrame: a dataframe of all speeches including text
+    """
     import pandas as pd
     df = pd.DataFrame(speeches_list, columns=['speaker', 'file_name', 'file_path', 'raw_tuple'])
     df['title'], df['date'], df['speech'] = zip(*df.raw_tuple)
@@ -72,6 +101,16 @@ def to_df(speeches_list):
 
 # %%
 def getTopicsProbsDf(exp='', withCounts=True):
+    """
+    Load list of topic probabilities for POTUS speeches, the list maintains the same order of speeches as the speeches dataframe in the experiment folder
+
+    Args:
+        exp (str, optional): name of experiment. Defaults to ''.
+        withCounts (bool, optional): include count of tokens for each speech. Defaults to True.
+
+    Returns:
+        pandas.DataFrame: data frame with a column for topic probabiilties, and optional column for token counts
+    """
     import pandas as pd
     root_folder = rootFolder(exp)
     df_probs_fn = root_folder + '/speeches_df_topics_probs.pkl'
@@ -90,6 +129,15 @@ def getTopicsProbsDf(exp='', withCounts=True):
 
 
 def getNgramsList(exp=''):
+    """
+    Load tokens (and bigrams) for the POTUS dataset, the list maintains the same order of speeches as the speeches dataframe in the experiment folder
+
+    Args:
+        exp (str, optional): name of experiment. Defaults to ''.
+
+    Returns:
+        list: list of tokens for all speeches
+    """
     import helpers.io as pickle_io
     root_folder = rootFolder(exp)
     fn = root_folder + '/bigrams.pkl'
@@ -100,6 +148,17 @@ def getNgramsList(exp=''):
 
 
 def gridExpResult(exp, scales=[25, 125], trim=0):
+    """
+    Load and return experiment results including: source dataframe, experiment settings, trained LDA model, associated BoW. This function does not perform any calculations, it only returns results produced by running an experiment pipeline
+
+    Args:
+        exp (str, optional): name of experiment. Defaults to ''.
+        scales (list, optional): KLD window sizes to be included in the results set. Defaults to [25, 125].
+        trim (int, optional): number of speeches to trim from each end. Defaults to 0.
+
+    Returns:
+        dict: df, settings, model, Bow
+    """
     import pandas as pd
     import glob
     import os
